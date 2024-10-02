@@ -7,6 +7,7 @@ async function main() {
     where: { email: "test123@mail.com" },
     update: {},
     create: {
+      id: "abc",
       email: "test123@mail.com",
       name: "test123",
       password: "password",

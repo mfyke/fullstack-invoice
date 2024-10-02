@@ -1,7 +1,6 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { InvoicesService } from './invoices.service';
-import e from 'express';
-import { error } from 'console';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 
 @Controller('invoices')
@@ -9,6 +8,7 @@ export class InvoicesController {
   constructor(private readonly invoicesService: InvoicesService) {}
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   async findAll() {
     const invoices = await this.invoicesService.findAll();
     if(invoices) {
@@ -19,6 +19,7 @@ export class InvoicesController {
   }
 
   @Get('total')
+  @UseGuards(JwtAuthGuard)
   async getTotal() {
     const aggregatedTotals = await this.invoicesService.getTotal();
     if(aggregatedTotals) {
@@ -29,6 +30,7 @@ export class InvoicesController {
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   async findOne(@Param('id') id: string) {
     const invoice = await this.invoicesService.findOne(id);
     if(invoice) {
