@@ -12,6 +12,10 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
+import { logout } from '../../features/auth/authSlice';
+import { useDispatch } from 'react-redux';
+import { ThunkDispatch } from "@reduxjs/toolkit";
+import { useNavigate } from 'react-router-dom';
 
 const pages = ['Home', 'Invoices', 'Bills', 'Expenses', 'Reports'];
 const settings = ['Logout'];
@@ -33,6 +37,16 @@ function Header() {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    setAnchorElUser(null);
+    dispatch(logout());
+    navigate('/');
   };
 
   return (
@@ -145,7 +159,7 @@ function Header() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem key={setting} onClick={handleLogout}>
                   <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
                 </MenuItem>
               ))}
