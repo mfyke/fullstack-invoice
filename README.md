@@ -12,7 +12,7 @@
 
 1. You can run the API in watch mode by entering the command `npm run start:dev`. Leave this terminal running while you continue to starting the front end of the application.
 
-1. To test the `invoices/total` route, you can make a post request with the test user credentials: `{username: test123, password: password}`. You can use Insomnia or some other API tester and make the body the JSON credentials. Once you make a request to `POST http://localhost:3000/auth/login`, you will be returned a JWT. In Insomnia, put the token into the token field under the Bearer tab. After you have done this, you can make a request to `GET http://localhost:3000/invoices/total` and you should see a result like the following:
+1. To test the `invoices/total` route, you can make a post request with the test user credentials: `{"username": "test123", "password": "password"}`. You can use Insomnia or some other API tester and make the body the JSON credentials. Once you make a request to `POST http://localhost:3000/auth/login`, you will be returned a JWT. In Insomnia, put the token into the token field under the Bearer tab. After you have done this, you can make a request to `GET http://localhost:3000/invoices/total` and you should see a result like the following:
 
 ![invoice total route test.](./assets/invoice-total.png)
 
