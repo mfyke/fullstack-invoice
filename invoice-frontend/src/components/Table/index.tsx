@@ -9,7 +9,9 @@ import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { useGetInvoicesQuery } from '../../app/services/invoiceService';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -44,35 +46,43 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(
-  id: string,
-  payee: string,
-  description: string,
-  dueDate: string,
-  amount: number,
-  paid: boolean
-) {
-  return { id, payee, description, dueDate, amount, paid };
+function formatDate(date: Date): string {
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const year = date.getFullYear();
+
+  return `${month}/${day}/${year}`;
 }
 
-const rows = [
-  createData('1','Amazon', "Purchases", "5/12/2025", 100.25, false),
-  createData('2', 'Costco', "Purchases", "7/12/2025", 500, true),
-  createData('3','Home Depot', "Rental", "7/12/2025", 225.75, false),
-  createData('4','US Foods', "Purchases", "8/12/2025", 465, true),
-  createData('5','Walmart', "Purchases", "8/12/2025", 100.25, false),
-  createData('6','Target', "Purchases", "8/12/2025", 100.25, false),
-];
-
 export default function CustomizedTables() {
+  interface Invoice {
+    id: string;
+    vendor_name: string;
+    description: string;
+    due_date: string;
+    amount: number;
+    paid: boolean;
+  }
+
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
+
+  const { userToken }  = useSelector((state: any) => state.auth);
+
+  const { data = [], error, isLoading } = useGetInvoicesQuery(userToken);
+
+  useEffect(() => {
+    if (data) {
+      setInvoices(data);
+    }
+  }, [data]);
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [details, setDetails] = useState({payee: '', description: '', dueDate: '', amount: 0, paid: false});
+  const [details, setDetails] = useState({vendor_name: '', description: '', due_date: '', amount: 0, paid: false, id: ''});
 
-  function handleClick(payee: string, description: string, dueDate: string, amount: number, paid: boolean) {
-    setDetails({payee, description, dueDate, amount, paid});
+  function handleClick(vendor_name: string, description: string, due_date: string, amount: number, paid: boolean, id: string) {
+    setDetails({vendor_name, description, due_date, amount, paid, id});
     handleOpen();
   }
 
@@ -90,13 +100,13 @@ export default function CustomizedTables() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <StyledTableRow key={row.id} onClick={()=>handleClick(row.payee, row.description, row.dueDate, row.amount, row.paid)}>
+          {invoices && invoices.map((row) => (
+            <StyledTableRow key={row.id} onClick={()=>handleClick(row.vendor_name, row.description, row.due_date, row.amount, row.paid, row.id)}>
                 <StyledTableCell component="th" scope="row">
-                  {row.payee}
+                  {row.vendor_name}
                 </StyledTableCell>
                 <StyledTableCell align="left">{row.description}</StyledTableCell>
-                <StyledTableCell align="left">{row.dueDate}</StyledTableCell>
+                <StyledTableCell align="left">{formatDate(new Date(row.due_date))}</StyledTableCell>
                 <StyledTableCell align="left">{`$${row.amount}`}</StyledTableCell>
                 <StyledTableCell align="left">{row.paid.toString()}</StyledTableCell>
             </StyledTableRow>
@@ -113,13 +123,16 @@ export default function CustomizedTables() {
       >
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            {details.payee}
+            {details.vendor_name}
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            Id: {details.id}
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             Description: {details.description}
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Due Date: {details.dueDate}
+            Due Date: {formatDate(new Date(details.due_date))}
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             Amount: ${details.amount}

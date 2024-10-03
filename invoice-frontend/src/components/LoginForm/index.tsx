@@ -6,8 +6,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { login } from '../../features/auth/authSlice';
 import { ThunkDispatch } from "@reduxjs/toolkit";
 import { useNavigate } from 'react-router-dom';
+import { z } from 'zod';
 
-
+const loginSchema = z.object({
+  username: z.string(),
+  password: z.string(),
+});
 
 export default function FormPropsTextFields() {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
@@ -18,7 +22,7 @@ export default function FormPropsTextFields() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    dispatch(login({ username, password }));
+    dispatch(login(loginSchema.parse({ username, password })));
     setUsername('');
     setPassword('');
   }
