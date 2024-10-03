@@ -16,7 +16,7 @@
 
 1. See the following screenshots for a demonstration of the functionality:
 
-![Login for on the home page](./assets/login.png)
+![Login for on the home page](../assets/login.png)
 
 ![Invoice page after authenticating](./assets/invoice-page.png)
 
