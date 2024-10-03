@@ -18,8 +18,8 @@
 
 ![Login for on the home page](../assets/login.png)
 
-![Invoice page after authenticating](./assets/invoice-page.png)
+![Invoice page after authenticating](../assets/invoice-page.png)
 
-![Invoice page with modal open](./assets/invoice-modal.png)
+![Invoice page with modal open](../assets/invoice-modal.png)
 
-![Logout Button](./assets/logout-button.png)
+![Logout Button](../assets/logout-button.png)
